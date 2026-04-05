@@ -1,8 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, TablePagination,
-  TextField, Box, TableSortLabel, LinearProgress, Button
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TablePagination,
+  TextField,
+  Box,
+  TableSortLabel,
+  LinearProgress,
+  Button,
+  Chip,
 } from "@mui/material";
 
 // Simple debounce helper
@@ -30,7 +41,7 @@ export default function ProductTable() {
     title: "",
     price: "",
     brand: "",
-    category: ""
+    category: "",
   });
 
   // Worker state
@@ -39,11 +50,12 @@ export default function ProductTable() {
   const [loadingRow, setLoadingRow] = useState(null);
 
   const debouncedSetFilters = useMemo(
-    () => debounce((field, value) => {
-      setFilters((prev) => ({ ...prev, [field]: value }));
-      setPage(0);
-    }, 500),
-    []
+    () =>
+      debounce((field, value) => {
+        setFilters((prev) => ({ ...prev, [field]: value }));
+        setPage(0);
+      }, 500),
+    [],
   );
 
   useEffect(() => {
@@ -67,17 +79,23 @@ export default function ProductTable() {
     fetchData();
   }, [page, rowsPerPage, orderBy, order, filters]);
 
-  const handleSort = useCallback((property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  }, [orderBy, order]);
+  const handleSort = useCallback(
+    (property) => {
+      const isAsc = orderBy === property && order === "asc";
+      setOrder(isAsc ? "desc" : "asc");
+      setOrderBy(property);
+    },
+    [orderBy, order],
+  );
 
-  const columns = useMemo(() => ["id", "title", "price", "brand", "category"], []);
+  const columns = useMemo(
+    () => ["id", "title", "price", "brand", "category"],
+    [],
+  );
 
   // Handle row click
   const handleRowClick = (row) => {
-    alert(`current Row Selected row is ${row.id}`)
+    alert(`current Row Selected row is ${row.id}`);
     if (worker) {
       worker.terminate();
       setWorker(null);
@@ -86,8 +104,8 @@ export default function ProductTable() {
     setLoadingRow(row.id);
 
     const newWorker = new Worker(new URL("./worker.js", import.meta.url));
-    console.log(row.id)
-    newWorker.postMessage({ fileUrl: 'url' }); 
+    console.log(row.id);
+    newWorker.postMessage({ fileUrl: "url" });
     newWorker.onmessage = (e) => {
       if (e.data.type === "progress") {
         setProgress(e.data.percent);
@@ -121,7 +139,9 @@ export default function ProductTable() {
         <Box mt={2}>
           <LinearProgress variant="determinate" value={progress} />
           <Box display="flex" justifyContent="space-between" mt={1}>
-            <span>Loading document... {loadingRow}… {progress}%</span>
+            <span>
+              Loading document... {loadingRow}… {progress}%
+            </span>
             <Button variant="outlined" color="error" onClick={handleCancel}>
               Cancel
             </Button>
@@ -164,7 +184,14 @@ export default function ProductTable() {
                 <TableCell>{row.title}</TableCell>
                 <TableCell>{row.price}</TableCell>
                 <TableCell>{row.brand}</TableCell>
-                <TableCell>{row.category}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={row.category === "beauty" ? "Active" : "Inactive"}
+                    color={row.category === "beauty" ? "success" : "error"}
+                    variant="outlined"
+                    style={{width:'30%', borderRadius: '6px'}}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
