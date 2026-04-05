@@ -1,0 +1,15 @@
+.table {
+  border: 1px solid #ddd;
+  margin-top: 10px;
+}
+.tr {
+  display: flex;
+}
+.th, .td {
+  flex: 1;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+.pagination {
+  margin-top: 10px;
+}
