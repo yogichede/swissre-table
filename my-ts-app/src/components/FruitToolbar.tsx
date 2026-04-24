@@ -31,7 +31,7 @@ export function FruitToolbar({
       />
 
       <button type="button" onClick={onToggleSort}>
-        Sort: {sortOrder === "asc" ? "A→Z" : "Z→A"}
+        Sort: {sortOrder === "asc" ? "A->Z" : "Z->A"}
       </button>
     </div>
   );

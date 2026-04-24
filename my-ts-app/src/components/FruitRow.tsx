@@ -76,7 +76,7 @@ export const FruitRow = React.memo(function FruitRow({
         borderBottom: "1px solid #e5e7eb",
       }}
     >
-      <span style={{ minWidth: 40, color: "#6b7280" }}>#{fruit.id}</span>
+      <span style={{ minWidth: 40, color: "#6b7280" }}>{fruit.id}</span>
 
       <div style={{ flex: 1 }}>
         {isEditing ? (

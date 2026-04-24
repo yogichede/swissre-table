@@ -6,7 +6,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
   delay = 300
 ) {
   const callbackRef = useRef(callback);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     callbackRef.current = callback;
@@ -15,7 +15,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
   useEffect(() => {
     return () => {
       if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
+        clearTimeout(timerRef.current);
       }
     };
   }, []);
@@ -23,10 +23,10 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
   return useMemo(() => {
     return (...args: Parameters<T>) => {
       if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
+        clearTimeout(timerRef.current);
       }
 
-      timerRef.current = window.setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         callbackRef.current(...args);
       }, delay);
     };
